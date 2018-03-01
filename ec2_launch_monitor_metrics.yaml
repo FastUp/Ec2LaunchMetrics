@@ -1,0 +1,13 @@
+env: dev
+lambda_code:
+- folder: ec2_launchmonitor
+  logical_resource_name: Ec2MonitorFunction
+  s3_bucket_param_name: LambdaCodeS3BucketParm
+  s3_key_param_name: LambdaCodeS3KeyParm
+  s3_version_param_name: LambdaCodeS3VersionParm
+project_name: Ec2LaunchMonitor
+region: us-east-1
+release_bucket:
+template: ec2_launch_monitor.cftemplate.yaml
+template_parameters: ec2_launch_monitor.cfconfig.json
+version: 1.0.0

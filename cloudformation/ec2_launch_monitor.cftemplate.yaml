@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ''
+Resources:
+  InstanceStartupEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      EventPattern:
+        source:
+        - aws.ec2
+        detail-type:
+        - EC2 Instance State-change Notification
+      Targets:
+      - Id: Ec2Monitor
+        Arn:
+          Fn::GetAtt:
+          - Ec2MonitorFunction
+          - Arn
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      FunctionName:
+        Ref: Ec2MonitorFunction
+      SourceArn:
+        Fn::GetAtt:
+        - InstanceStartupEvent
+        - Arn
+  LambdaInvocationFailureAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      EvaluationPeriods: '1'
+      Dimensions:
+      - Name: FunctionName
+        Value:
+          Ref: Ec2MonitorFunction
+      - Name: Resource
+        Value:
+          Ref: Ec2MonitorFunction
+      AlarmActions:
+      - Ref: AlarmsTopicParm
+      AlarmDescription: Alarm raised when the Ec2 Launch Monitor Function Errors
+        fails.
+      Namespace: AWS/Lambda
+      Period: '300'
+      ComparisonOperator: GreaterThanThreshold
+      Statistic: Sum
+      Threshold: '0'
+      MetricName: Errors
+  Ec2MonitorFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Ref LambdaCodeS3BucketParm
+        S3Key: !Ref LambdaCodeS3KeyParm
+        S3ObjectVersion: !Ref LambdaCodeS3VersionParm
+      Handler: ec2_launch_monitor.run
+      Role:
+        Ref: IamRoleArnParm
+      Timeout: 60
+      Runtime: python2.7
+Parameters:
+  AlarmsTopicParm:
+    Type: String
+  IamRoleArnParm:
+    Type: String
+  LambdaCodeS3BucketParm:
+    Type: String
+  LambdaCodeS3KeyParm:
+    Type: String
+  LambdaCodeS3VersionParm:
+    Type: String

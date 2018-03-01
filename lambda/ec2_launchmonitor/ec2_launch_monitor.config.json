@@ -1,0 +1,4 @@
+{
+  "MetricName":"InstanceStateChangeEvent",
+  "MetricNameSpace":"CompanyName/DepartmentName/EC2"
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "ParameterValue": "",
+    "ParameterKey": "AlarmsTopicParm"
+  },
+  {
+    "ParameterValue": "",
+    "ParameterKey": "IamRoleArnParm"
+  },
+  {
+    "ParameterValue": "",
+    "ParameterKey": "LambdaCodeS3BucketParm"
+  },
+  {
+    "ParameterValue": "",
+    "ParameterKey": "LambdaCodeS3KeyParm"
+  },
+  {
+    "ParameterValue": "",
+    "ParameterKey": "LambdaCodeS3VersionParm"
+  }
+]
